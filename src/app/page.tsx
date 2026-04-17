@@ -1,65 +1,349 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
 export default function Home() {
+  const [abaAtiva, setAbaAtiva] = useState(0);
+
+  const abas = [
+    {
+      label: "Pesquisar tudo",
+      titulo: "O que você procura em Garopaba?",
+      placeholder: "Praias, trilhas, atrativos...",
+    },
+    {
+      label: "Hospedagens",
+      titulo: "Onde ficar em Garopaba?",
+      placeholder: "Pousadas, hotéis, camping...",
+    },
+    {
+      label: "Atrativos Turísticos",
+      titulo: "O que fazer em Garopaba?",
+      placeholder: "Trilhas, mirantes, lagoas...",
+    },
+    {
+      label: "Gastronomia",
+      titulo: "Onde comer em Garopaba?",
+      placeholder: "Pizzaria, sushi, hamburgueria...",
+    },
+  ];
+
+  const praias = [
+    { nome: "Praia do Centro", foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/2a/40/3b/visao-do-alto-do-morro.jpg" },
+    { nome: "Praia do Silveira", foto: "https://static.ndmais.com.br/2023/08/praia-do-siriu-garopaba-3-800x599.jpeg" },
+    { nome: "Praia da Ferrugem", foto: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600" },
+    { nome: "Praia da Vigia", foto: "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600" },
+    { nome: "Praia do Siriú", foto: "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=600" },
+    { nome: "Praia da Gamboa", foto: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=600" },
+    { nome: "Praia da Barra", foto: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600" },
+    { nome: "Praia do Ouvidor", foto: "https://images.unsplash.com/photo-1484821582734-6692f9447dde?w=600" },
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
+
+      <style>{`
+        .nav-link {
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          text-decoration: none;
+          color: #1f2937;
+          font-size: 14px;
+          font-weight: 500;
+          padding: 6px 10px;
+          border-radius: 6px;
+          transition: background-color 0.2s, color 0.2s;
+        }
+        .nav-link:hover {
+          background-color: #f3f4f6;
+          color: #111;
+        }
+        .aba {
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          background: none;
+          border: none;
+          border-bottom: 2px solid transparent;
+          padding: 8px 2px;
+          font-size: 15px;
+          font-weight: 500;
+          color: #6b7280;
+          cursor: pointer;
+          transition: color 0.2s, border-bottom 0.2s;
+        }
+        .aba:hover { color: #111; }
+        .aba.ativa {
+          color: #111;
+          border-bottom: 2px solid #111;
+        }
+        .cat-card {
+          text-decoration: none;
+          position: relative;
+          border-radius: 16px;
+          overflow: hidden;
+          height: 280px;
+          display: block;
+          background-color: #e5e7eb;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          transition: box-shadow 0.3s ease;
+        }
+        .cat-card:hover {
+          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .cat-card img {
+          transition: transform 0.4s ease;
+        }
+        .cat-card:hover img {
+          transform: scale(1.08);
+        }
+        .blog-card img {
+          transition: transform 0.4s ease;
+        }
+        .blog-card:hover img {
+          transform: scale(1.08);
+        }
+        .praia-card {
+          text-decoration: none;
+          flex: 0 0 calc(25% - 12px);
+          border-radius: 16px;
+          overflow: hidden;
+          position: relative;
+          height: 280px;
+          display: block;
+          background-color: #e5e7eb;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          transition: box-shadow 0.3s ease;
+        }
+        .praia-card:hover {
+          box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .praia-card img {
+          transition: transform 0.4s ease;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .praia-card:hover img {
+          transform: scale(1.08);
+        }
+        .seta-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 40px;
+          height: 40px;
+          background: white;
+          border: none;
+          border-radius: 50%;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          font-size: 18px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+          transition: box-shadow 0.2s;
+        }
+        .seta-btn:hover {
+          box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+      `}</style>
+
+      {/* HEADER */}
+      <header style={{
+        position: "fixed",
+        top: 0, left: 0, right: 0,
+        zIndex: 100,
+        backgroundColor: "white",
+        borderBottom: "1px solid #e5e7eb",
+        height: "60px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+      }}>
+        <div style={{ width: "60%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <a href="/" style={{
+            textDecoration: "none",
+            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize: "20px", fontWeight: "800", color: "#111", letterSpacing: "-0.5px",
+          }}>
+            Destino Garopaba
+          </a>
+          <nav>
+            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+              {[
+                { label: "Garopaba", href: "#" },
+                { label: "Nossas Praias", href: "#" },
+                { label: "Atrativos Turísticos", href: "#" },
+                { label: "Hospedagens", href: "#" },
+                { label: "Gastronomia", href: "#" },
+                { label: "Fale Conosco", href: "#" },
+              ].map((item) => (
+                <a key={item.label} href={item.href} className="nav-link">{item.label}</a>
+              ))}
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      <div style={{ height: "60px" }} />
+
+      {/* BUSCA */}
+      <section style={{ backgroundColor: "#f5f5f5", height: "335px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: "60%", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
+          <h1 style={{
+            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize: "42px", fontWeight: "800", color: "#111", textAlign: "center", margin: 0,
+          }}>
+            {abas[abaAtiva].titulo}
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <div style={{ display: "flex", gap: "24px" }}>
+            {abas.map((aba, index) => (
+              <button key={aba.label} className={`aba ${abaAtiva === index ? "ativa" : ""}`} onClick={() => setAbaAtiva(index)}>
+                {aba.label}
+              </button>
+            ))}
+          </div>
+          <div style={{
+            display: "flex", alignItems: "center", backgroundColor: "white",
+            borderRadius: "999px", padding: "6px 6px 6px 20px", width: "100%",
+            border: "1px solid #e5e7eb", boxSizing: "border-box",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+          }}>
+            <span style={{ fontSize: "18px", marginRight: "10px", color: "#6b7280" }}>🔍</span>
+            <input type="text" placeholder={abas[abaAtiva].placeholder} style={{
+              flex: 1, border: "none", background: "none", outline: "none",
+              fontSize: "15px", color: "#111", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            }} />
+            <button style={{
+              backgroundColor: "#111", color: "white", border: "none", borderRadius: "999px",
+              padding: "12px 28px", fontSize: "15px", fontWeight: "600", cursor: "pointer",
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            }}>Buscar</button>
+          </div>
+        </div>
+      </section>
+
+      {/* BANNER */}
+      <section style={{ display: "flex", justifyContent: "center", padding: "40px 0", backgroundColor: "#f5f5f5" }}>
+        <div style={{
+          width: "60%", height: "460px", backgroundColor: "#b4d2f1",
+          borderRadius: "24px", display: "flex", overflow: "hidden",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+        }}>
+          <div style={{ width: "55%", padding: "24px", position: "relative", flexShrink: 0 }}>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/4/46/0_04192022IMG_024626487.jpg"
+              alt="Atividades em Garopaba"
+              style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "16px" }}
+            />
+            <div style={{
+              position: "absolute", bottom: "36px", left: "36px",
+              backgroundColor: "white", color: "#111", fontSize: "13px", fontWeight: "600",
+              padding: "6px 14px", borderRadius: "999px",
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+            }}>© AILTON SOUZA</div>
+          </div>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "48px 48px 48px 32px", gap: "20px" }}>
+            <h2 style={{
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontSize: "44px", fontWeight: "900", color: "#111", margin: 0, lineHeight: "1.1",
+            }}>Encontre atividades para tudo que você curte</h2>
+            <p style={{
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontSize: "16px", color: "#4b5563", margin: 0, lineHeight: "1.6",
+            }}>Explore as melhores experiências em Garopaba e reserve com a gente.</p>
+            <button style={{
+              backgroundColor: "#111", color: "white", border: "none", borderRadius: "999px",
+              padding: "16px 32px", fontSize: "15px", fontWeight: "600", cursor: "pointer",
+              fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", alignSelf: "flex-start",
+            }}>Explorar agora</button>
+          </div>
+        </div>
+      </section>
+
+      {/* CATEGORIAS COM FOTO */}
+      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 0 60px", backgroundColor: "#f5f5f5" }}>
+        <div style={{ width: "60%", marginBottom: "16px" }}>
+          <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: "0 0 2px" }}>
+            Encontre atividades por interesse
+          </h2>
+          <p style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "14px", color: "#6b7280", margin: 0 }}>
+            Você encontra tudo do que gosta aqui
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div style={{ width: "60%", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
+          {[
+            { label: "Atrativos Turísticos", foto: "https://static.ndmais.com.br/2023/08/praia-do-siriu-garopaba-3-800x599.jpeg" },
+            { label: "Nossas Praias", foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/2a/40/3b/visao-do-alto-do-morro.jpg" },
+            { label: "Hospedagens", foto: "https://www.passaromarron.com.br/wp-content/uploads/2023/12/dicas-para-hospedagem.jpg" },
+            { label: "Gastronomia", foto: "https://img.freepik.com/fotos-gratis/uma-variedade-plana-com-deliciosa-comida-brasileira_23-2148739179.jpg" },
+          ].map((cat) => (
+            <a key={cat.label} href="#" className="cat-card">
+              <img src={cat.foto} alt={cat.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+              <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "48px 16px 16px", background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)" }}>
+                <span style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "18px", fontWeight: "700", color: "white" }}>{cat.label}</span>
+              </div>
+            </a>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* BLOG */}
+      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 60px", backgroundColor: "white" }}>
+        <div style={{ width: "60%", marginBottom: "20px" }}>
+          <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: 0 }}>
+            Inspiração para começar
+          </h2>
+        </div>
+        <div style={{ width: "60%", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+          {[
+            { foto: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600", titulo: "As praias mais bonitas de Garopaba para você conhecer" },
+            { foto: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600", titulo: "Os melhores restaurantes e experiências gastronômicas da cidade" },
+            { foto: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600", titulo: "Trilhas e aventuras imperdíveis ao redor de Garopaba" },
+          ].map((post, index) => (
+            <a key={index} href="#" className="blog-card" style={{
+              textDecoration: "none", display: "block", position: "relative",
+              borderRadius: "16px", overflow: "hidden", height: "280px", backgroundColor: "#e5e7eb",
+            }}>
+              <img src={post.foto} alt={post.titulo} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "60px 20px 20px", background: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)" }}>
+                <p style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "16px", fontWeight: "700", color: "white", margin: 0, lineHeight: "1.4" }}>
+                  {post.titulo}
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* PRAIAS */}
+      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 60px", backgroundColor: "#f5f5f5" }}>
+        <div style={{ width: "60%", marginBottom: "20px" }}>
+          <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: 0 }}>
+            Nossas Praias
+          </h2>
+        </div>
+        <div style={{ width: "60%", position: "relative" }}>
+          <button className="seta-btn" style={{ left: "-20px" }}
+            onClick={() => { const el = document.getElementById("praias-scroll"); if (el) el.scrollLeft -= 320; }}>←</button>
+          <div id="praias-scroll" style={{ display: "flex", gap: "16px", overflowX: "hidden", scrollBehavior: "smooth" }}>
+            {praias.map((praia) => (
+              <a key={praia.nome} href="#" className="praia-card">
+                <img src={praia.foto} alt={praia.nome} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "48px 16px 16px", background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)" }}>
+                  <span style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "18px", fontWeight: "700", color: "white" }}>
+                    {praia.nome}
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+          <button className="seta-btn" style={{ right: "-20px" }}
+            onClick={() => { const el = document.getElementById("praias-scroll"); if (el) el.scrollLeft += 320; }}>→</button>
+        </div>
+      </section>
+
+    </main>
   );
 }
