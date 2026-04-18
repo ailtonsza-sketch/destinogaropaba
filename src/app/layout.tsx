@@ -109,7 +109,20 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body style={{ margin: 0, padding: 0 }}>{children}</body>
+      <body style={{ margin: 0, padding: 0 }}>
+        {children}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LGEVZZB0XT" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-LGEVZZB0XT');
+            `,
+          }}
+        />
+      </body>
     </html>
   );
 }
