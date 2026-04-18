@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Destino Garopaba | Guia Turístico de Garopaba, SC",
+  title: "Destino Garopaba | Tudo sobre Garopaba - SC",
   description: "Guia completo de Garopaba, Santa Catarina. Praias, trilhas, restaurantes, hospedagens, atrativos turísticos e tudo que você precisa saber para visitar Garopaba.",
   keywords: "Garopaba, Garopaba SC, Garopaba Santa Catarina, praias de Garopaba, turismo Garopaba, o que fazer em Garopaba, hospedagem Garopaba, restaurantes Garopaba, trilhas Garopaba, Praia do Silveira, Praia da Ferrugem, Praia do Siriú, Praia da Gamboa, surf Garopaba, viagem Garopaba, verão Garopaba, litoral sul catarinense, guia turístico Garopaba",
   authors: [{ name: "Destino Garopaba" }],
