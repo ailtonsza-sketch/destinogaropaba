@@ -153,14 +153,6 @@ export default function EmBreve() {
             </p>
           </div>
         )}
-        <div style={{ marginTop: "48px" }}>
-          <a href="https://instagram.com/povgaropaba" target="_blank" style={{
-            color: "rgba(255,255,255,0.7)", textDecoration: "none",
-            fontSize: "13px", fontWeight: "500", letterSpacing: "0.05em",
-          }}>
-            @povgaropaba
-          </a>
-        </div>
         <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "24px" }}>
           © 2026 Destino Garopaba · Todos os direitos reservados
         </p>
