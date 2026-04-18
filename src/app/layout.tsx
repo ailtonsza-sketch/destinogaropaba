@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     canonical: "https://destinogaropaba.com.br",
   },
   verification: {
-    google: "",
+    google: "jwkid2oCn6weIsETEWfuIFinJFx8Yrbms42cGsdeK6U",
   },
 };
 
