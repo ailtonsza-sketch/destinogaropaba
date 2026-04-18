@@ -102,7 +102,7 @@ export default function RootLayout({
                 "url": "https://destinogaropaba.com.br",
                 "logo": "https://destinogaropaba.com.br/destinogaropaba.JPG",
                 "sameAs": [
-                  "https://instagram.com/povgaropaba"
+                  ""
                 ]
               }
             }),
