@@ -10,6 +10,14 @@ const supabase = createClient(
 export default function Home() {
   const [abaAtiva, setAbaAtiva] = useState(0);
   const [restaurantes, setRestaurantes] = useState<any[]>([]);
+  const [busca, setBusca] = useState("");
+  const [usuario, setUsuario] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) setUsuario(data.user);
+    });
+  }, []);
 
   useEffect(() => {
     supabase.from("restaurantes").select("*").order("destaque", { ascending: false }).then(({ data }) => {
@@ -35,33 +43,37 @@ export default function Home() {
     { nome: "Praia do Ouvidor", foto: "https://images.unsplash.com/photo-1484821582734-6692f9447dde?w=600" },
   ];
 
+  const handleBuscar = () => {
+    if (busca.trim()) window.location.href = `/busca?q=${encodeURIComponent(busca)}`;
+  };
+
   return (
-    <main style={{ backgroundColor: "#ffffff", minHeight: "100vh" }}>
+    <main style={{ backgroundColor: "#f2f2f2", minHeight: "100vh" }}>
       <style>{`
         .nav-link { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; color: #1f2937; font-size: 14px; font-weight: 500; padding: 6px 10px; border-radius: 6px; transition: background-color 0.2s, color 0.2s; }
-        .nav-link:hover { background-color: #1f2937; color: white; }
+        .nav-link:hover { background-color: #f3f4f6; color: #111; }
         .aba { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: none; border: none; border-bottom: 2px solid transparent; padding: 8px 2px; font-size: 15px; font-weight: 500; color: #6b7280; cursor: pointer; transition: color 0.2s, border-bottom 0.2s; }
         .aba:hover { color: #111; }
         .aba.ativa { color: #111; border-bottom: 2px solid #111; }
-        .cat-card { text-decoration: none; position: relative; border-radius: 16px; overflow: hidden; height: 280px; display: block; background-color: #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: box-shadow 0.3s ease; }
-        .cat-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        .cat-card { text-decoration: none; position: relative; border-radius: 16px; overflow: hidden; height: 280px; display: block; background-color: #e5e7eb; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: box-shadow 0.3s ease; }
+        .cat-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
         .cat-card img { transition: transform 0.4s ease; }
         .cat-card:hover img { transform: scale(1.08); }
         .blog-card img { transition: transform 0.4s ease; }
         .blog-card:hover img { transform: scale(1.08); }
-        .praia-card { text-decoration: none; flex: 0 0 calc(25% - 12px); border-radius: 16px; overflow: hidden; position: relative; height: 280px; display: block; background-color: #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: box-shadow 0.3s ease; }
-        .praia-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        .praia-card { text-decoration: none; flex: 0 0 calc(25% - 12px); border-radius: 16px; overflow: hidden; position: relative; height: 280px; display: block; background-color: #e5e7eb; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: box-shadow 0.3s ease; }
+        .praia-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
         .praia-card img { transition: transform 0.4s ease; width: 100%; height: 100%; object-fit: cover; display: block; }
         .praia-card:hover img { transform: scale(1.08); }
-        .seta-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: white; border: none; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: box-shadow 0.2s; }
-        .seta-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+        .seta-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: white; border: none; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; transition: box-shadow 0.2s; }
+        .seta-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
         #praias-scroll::-webkit-scrollbar { display: none; }
         #restaurantes-scroll::-webkit-scrollbar { display: none; }
       `}</style>
 
       {/* HEADER */}
-      <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, backgroundColor: "white", borderBottom: "1px solid #e5e7eb", height: "60px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-        <div style={{ width: "60%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, backgroundColor: "white", borderBottom: "1px solid #e5e7eb", height: "60px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+        <div style={{ width: "70%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <a href="/home" style={{ textDecoration: "none", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "20px", fontWeight: "800", color: "#111", letterSpacing: "-0.5px" }}>Destino Garopaba</a>
           <nav>
             <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -70,13 +82,27 @@ export default function Home() {
                 { label: "Nossas Praias", href: "#" },
                 { label: "Atrativos Turísticos", href: "#" },
                 { label: "Hospedagens", href: "#" },
-                { label: "Gastronomia", href: "#" },
+                { label: "Gastronomia", href: "/gastronomia" },
                 { label: "Fale Conosco", href: "#" },
               ].map((item) => (
                 <a key={item.label} href={item.href} className="nav-link">{item.label}</a>
               ))}
             </div>
           </nav>
+          {usuario ? (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginLeft: "12px" }}>
+              <a href="/perfil" style={{ fontSize: "14px", fontWeight: "600", color: "#111", textDecoration: "none" }}>
+                {usuario.user_metadata?.name || usuario.email}
+              </a>
+              <button onClick={async () => { await supabase.auth.signOut(); setUsuario(null); }} style={{ backgroundColor: "#f3f4f6", color: "#111", border: "none", padding: "8px 16px", borderRadius: "999px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>
+                Sair
+              </button>
+            </div>
+          ) : (
+            <a href="/login" style={{ textDecoration: "none", backgroundColor: "#111", color: "white", padding: "8px 20px", borderRadius: "999px", fontSize: "14px", fontWeight: "600", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", marginLeft: "12px" }}>
+              Entrar
+            </a>
+          )}
         </div>
       </header>
 
@@ -84,7 +110,7 @@ export default function Home() {
 
       {/* BUSCA */}
       <section style={{ backgroundColor: "#f2f2f2", height: "335px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: "60%", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
+        <div style={{ width: "70%", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" }}>
           <h1 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "42px", fontWeight: "800", color: "#111", textAlign: "center", margin: 0 }}>
             {abas[abaAtiva].titulo}
           </h1>
@@ -93,43 +119,50 @@ export default function Home() {
               <button key={aba.label} className={`aba ${abaAtiva === index ? "ativa" : ""}`} onClick={() => setAbaAtiva(index)}>{aba.label}</button>
             ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", backgroundColor: "white", borderRadius: "14px", padding: "6px 6px 6px 20px", width: "100%", border: "1px solid #e5e7eb", boxSizing: "border-box", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+          <div style={{ display: "flex", alignItems: "center", backgroundColor: "white", borderRadius: "999px", padding: "6px 6px 6px 20px", width: "100%", border: "1px solid #e5e7eb", boxSizing: "border-box", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
             <span style={{ fontSize: "18px", marginRight: "10px", color: "#6b7280" }}>🔍</span>
-            <input type="text" placeholder={abas[abaAtiva].placeholder} style={{ flex: 1, border: "none", background: "none", outline: "none", fontSize: "15px", color: "#111", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }} />
-            <button style={{ backgroundColor: "#111", color: "white", border: "none", borderRadius: "14px", padding: "12px 28px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>Buscar</button>
+            <input
+              type="text"
+              placeholder={abas[abaAtiva].placeholder}
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleBuscar(); }}
+              style={{ flex: 1, border: "none", background: "none", outline: "none", fontSize: "15px", color: "#111", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+            />
+            <button onClick={handleBuscar} style={{ backgroundColor: "#111", color: "white", border: "none", borderRadius: "999px", padding: "12px 28px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>Buscar</button>
           </div>
         </div>
       </section>
 
       {/* BANNER */}
-      <section style={{ display: "flex", justifyContent: "center", padding: "40px 0", backgroundColor: "#ffffff" }}>
-        <div style={{ width: "60%", height: "460px", backgroundColor: "#ffcc00", borderRadius: "10px", display: "flex", overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}>
+      <section style={{ display: "flex", justifyContent: "center", padding: "40px 0", backgroundColor: "#f2f2f2" }}>
+        <div style={{ width: "70%", height: "460px", backgroundColor: "#ffcc00", borderRadius: "16px", display: "flex", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
           <div style={{ width: "55%", padding: "0px", position: "relative", flexShrink: 0 }}>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/0_04192022IMG_024626487.jpg" alt="Atividades em Garopaba" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }} />
-            <div style={{ position: "absolute", bottom: "36px", left: "36px", backgroundColor: "white", color: "#111", fontSize: "13px", fontWeight: "600", padding: "6px 14px", borderRadius: "14px", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>© AILTON SOUZA</div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/46/0_04192022IMG_024626487.jpg" alt="Atividades em Garopaba" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "16px" }} />
+            <div style={{ position: "absolute", bottom: "36px", left: "36px", backgroundColor: "white", color: "#111", fontSize: "13px", fontWeight: "600", padding: "6px 14px", borderRadius: "999px", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>© AILTON SOUZA</div>
           </div>
           <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "48px 48px 48px 32px", gap: "20px" }}>
             <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "44px", fontWeight: "900", color: "#111", margin: 0, lineHeight: "1.1" }}>Encontre atividades para tudo que você curte</h2>
             <p style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "16px", color: "#4b5563", margin: 0, lineHeight: "1.6" }}>Explore as melhores experiências em Garopaba e reserve com a gente.</p>
-            <button style={{ backgroundColor: "#111", color: "white", border: "none", borderRadius: "14px", padding: "16px 32px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", alignSelf: "flex-start" }}>Explorar agora</button>
+            <button style={{ backgroundColor: "#111", color: "white", border: "none", borderRadius: "999px", padding: "16px 32px", fontSize: "15px", fontWeight: "600", cursor: "pointer", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", alignSelf: "flex-start" }}>Explorar agora</button>
           </div>
         </div>
       </section>
 
       {/* CATEGORIAS */}
-      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 0 60px", backgroundColor: "#ffffff" }}>
-        <div style={{ width: "60%", marginBottom: "16px" }}>
-          <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: "0 0 2px" }}>O que fazer em Garopaba</h2>
+      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "0 0 48px", backgroundColor: "#f2f2f2" }}>
+        <div style={{ width: "70%", marginBottom: "20px" }}>
+          <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: "0 0 4px" }}>O que fazer em Garopaba</h2>
           <p style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "14px", color: "#6b7280", margin: 0 }}>Você encontra tudo do que gosta aqui</p>
         </div>
-        <div style={{ width: "60%", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
+        <div style={{ width: "70%", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
           {[
-            { label: "Atrativos Turísticos", foto: "https://static.ndmais.com.br/2023/08/praia-do-siriu-garopaba-3-800x599.jpeg" },
-            { label: "Nossas Praias", foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/2a/40/3b/visao-do-alto-do-morro.jpg" },
-            { label: "Hospedagens", foto: "https://www.passaromarron.com.br/wp-content/uploads/2023/12/dicas-para-hospedagem.jpg" },
-            { label: "Gastronomia", foto: "https://img.freepik.com/fotos-gratis/uma-variedade-plana-com-deliciosa-comida-brasileira_23-2148739179.jpg" },
+            { label: "Atrativos Turísticos", foto: "https://static.ndmais.com.br/2023/08/praia-do-siriu-garopaba-3-800x599.jpeg", href: "/home" },
+            { label: "Nossas Praias", foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/2a/40/3b/visao-do-alto-do-morro.jpg", href: "/home" },
+            { label: "Hospedagens", foto: "https://www.passaromarron.com.br/wp-content/uploads/2023/12/dicas-para-hospedagem.jpg", href: "/home" },
+            { label: "Gastronomia", foto: "https://img.freepik.com/fotos-gratis/uma-variedade-plana-com-deliciosa-comida-brasileira_23-2148739179.jpg", href: "/gastronomia" },
           ].map((cat) => (
-            <a key={cat.label} href="#" className="cat-card">
+            <a key={cat.label} href={cat.href} className="cat-card">
               <img src={cat.foto} alt={cat.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "48px 16px 16px", background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)" }}>
                 <span style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "18px", fontWeight: "700", color: "white" }}>{cat.label}</span>
@@ -140,17 +173,17 @@ export default function Home() {
       </section>
 
       {/* BLOG */}
-      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 60px", backgroundColor: "#ffcc00" }}>
-        <div style={{ width: "60%", marginBottom: "20px" }}>
+      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 48px", backgroundColor: "white" }}>
+        <div style={{ width: "70%", marginBottom: "20px" }}>
           <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: 0 }}>Confira as novidades sobre Garopaba</h2>
         </div>
-        <div style={{ width: "60%", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+        <div style={{ width: "70%", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
           {[
             { foto: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600", titulo: "As praias mais bonitas de Garopaba para você conhecer" },
             { foto: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600", titulo: "Os melhores restaurantes e experiências gastronômicas da cidade" },
             { foto: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600", titulo: "Trilhas e aventuras imperdíveis ao redor de Garopaba" },
           ].map((post, index) => (
-            <a key={index} href="#" className="blog-card" style={{ textDecoration: "none", display: "block", position: "relative", borderRadius: "14px", overflow: "hidden", height: "280px", backgroundColor: "#ffffff" }}>
+            <a key={index} href="#" className="blog-card" style={{ textDecoration: "none", display: "block", position: "relative", borderRadius: "16px", overflow: "hidden", height: "280px", backgroundColor: "#e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
               <img src={post.foto} alt={post.titulo} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "60px 20px 20px", background: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)" }}>
                 <p style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "16px", fontWeight: "700", color: "white", margin: 0, lineHeight: "1.4" }}>{post.titulo}</p>
@@ -161,11 +194,11 @@ export default function Home() {
       </section>
 
       {/* PRAIAS */}
-      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 60px", backgroundColor: "#f5f5f5" }}>
-        <div style={{ width: "60%", marginBottom: "20px" }}>
+      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 48px", backgroundColor: "#f2f2f2" }}>
+        <div style={{ width: "70%", marginBottom: "20px" }}>
           <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: 0 }}>Conheça nossas praias</h2>
         </div>
-        <div style={{ width: "60%", position: "relative" }}>
+        <div style={{ width: "70%", position: "relative" }}>
           <button className="seta-btn" style={{ left: "-20px" }} onClick={() => { const el = document.getElementById("praias-scroll"); if (el) el.scrollLeft -= 320; }}>←</button>
           <div id="praias-scroll" style={{ display: "flex", gap: "16px", overflowX: "auto", scrollBehavior: "smooth", cursor: "grab", scrollbarWidth: "none" }}>
             {praias.map((praia) => (
@@ -182,21 +215,21 @@ export default function Home() {
       </section>
 
       {/* RESTAURANTES */}
-      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 60px", backgroundColor: "#ffffff" }}>
-        <div style={{ width: "60%", marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 48px", backgroundColor: "white" }}>
+        <div style={{ width: "70%", marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h2 style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "22px", fontWeight: "700", color: "#111", margin: 0 }}>Onde comer em Garopaba?</h2>
-          <a href="#" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "14px", fontWeight: "600", color: "#111", textDecoration: "none", border: "1px solid #111", padding: "8px 20px", borderRadius: "999px" }}>Ver mais</a>
+          <a href="/gastronomia" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "14px", fontWeight: "600", color: "#111", textDecoration: "none", border: "1px solid #e5e7eb", padding: "8px 20px", borderRadius: "999px", backgroundColor: "white" }}>Ver mais</a>
         </div>
-        <div style={{ width: "60%", position: "relative" }}>
+        <div style={{ width: "70%", position: "relative" }}>
           <button className="seta-btn" style={{ left: "-20px" }} onClick={() => { const el = document.getElementById("restaurantes-scroll"); if (el) el.scrollLeft -= 320; }}>←</button>
           <div id="restaurantes-scroll" style={{ display: "flex", gap: "16px", overflowX: "auto", scrollBehavior: "smooth", cursor: "grab", scrollbarWidth: "none" }}>
             {restaurantes.length === 0 ? (
               <p style={{ color: "#6b7280", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>Carregando restaurantes...</p>
             ) : (
               restaurantes.map((rest) => (
-                <a key={rest.id} href={`/gastronomia/${rest.slug}`} style={{ textDecoration: "none", flex: "0 0 calc(25% - 12px)", borderRadius: "16px", overflow: "hidden", position: "relative", height: "280px", display: "block", backgroundColor: "#e5e7eb", boxShadow: "0 2px 8px rgba(0,0,0,0.08)", transition: "box-shadow 0.3s ease" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.15)"; const img = e.currentTarget.querySelector("img") as HTMLImageElement; if (img) img.style.transform = "scale(1.08)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.08)"; const img = e.currentTarget.querySelector("img") as HTMLImageElement; if (img) img.style.transform = "scale(1)"; }}>
+                <a key={rest.id} href={`/gastronomia/${rest.slug}`} style={{ textDecoration: "none", flex: "0 0 calc(25% - 12px)", borderRadius: "16px", overflow: "hidden", position: "relative", height: "280px", display: "block", backgroundColor: "#e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", transition: "box-shadow 0.3s ease" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.12)"; const img = e.currentTarget.querySelector("img") as HTMLImageElement; if (img) img.style.transform = "scale(1.08)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.06)"; const img = e.currentTarget.querySelector("img") as HTMLImageElement; if (img) img.style.transform = "scale(1)"; }}>
                   <img src={rest.foto_url} alt={rest.nome} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform 0.4s ease" }} />
                   <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "48px 16px 16px", background: "linear-gradient(to top, rgba(0,0,0,0.8), transparent)" }}>
                     <span style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "16px", fontWeight: "700", color: "white", display: "block" }}>{rest.nome}</span>
@@ -213,6 +246,12 @@ export default function Home() {
           <button className="seta-btn" style={{ right: "-20px" }} onClick={() => { const el = document.getElementById("restaurantes-scroll"); if (el) el.scrollLeft += 320; }}>→</button>
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer style={{ backgroundColor: "#1f2937", color: "#9ca3af", padding: "32px 0", textAlign: "center" }}>
+        <p style={{ color: "white", fontWeight: "700", fontSize: "16px", margin: "0 0 4px" }}>Destino Garopaba</p>
+        <p style={{ fontSize: "13px", margin: 0 }}>O guia definitivo de Garopaba, SC</p>
+      </footer>
 
     </main>
   );
