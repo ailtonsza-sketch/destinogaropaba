@@ -7,6 +7,10 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+import Header from "@/components/Header";
+
+import Footer from "@/components/Footer";
+
 export default function Home() {
   const [abaAtiva, setAbaAtiva] = useState(0);
   const [restaurantes, setRestaurantes] = useState<any[]>([]);
@@ -26,10 +30,10 @@ export default function Home() {
   }, []);
 
   const abas = [
-    { label: "Pesquisar tudo", titulo: "O que você procura em Garopaba?", placeholder: "Praias, trilhas, atrativos..." },
-    { label: "Hospedagens", titulo: "Onde ficar em Garopaba?", placeholder: "Pousadas, hotéis, camping..." },
-    { label: "Atrativos Turísticos", titulo: "O que fazer em Garopaba?", placeholder: "Trilhas, mirantes, lagoas..." },
-    { label: "Gastronomia", titulo: "Onde comer em Garopaba?", placeholder: "Pizzaria, sushi, hamburgueria..." },
+    { label: "Pesquisar tudo", titulo: "O que você procura?", placeholder: "Praias, trilhas, atrativos..." },
+    { label: "Hospedagens", titulo: "Onde ficar?", placeholder: "Pousadas, hotéis, camping..." },
+    { label: "Atrativos Turísticos", titulo: "O que fazer?", placeholder: "Trilhas, mirantes, lagoas..." },
+    { label: "Gastronomia", titulo: "Onde comer?", placeholder: "Pizzaria, sushi, hamburgueria..." },
   ];
 
   const praias = [
@@ -72,39 +76,7 @@ export default function Home() {
       `}</style>
 
       {/* HEADER */}
-      <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, backgroundColor: "white", borderBottom: "1px solid #e5e7eb", height: "60px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-        <div style={{ width: "70%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <a href="/home" style={{ textDecoration: "none", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", fontSize: "20px", fontWeight: "800", color: "#111", letterSpacing: "-0.5px" }}>Destino Garopaba</a>
-          <nav>
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              {[
-                { label: "Garopaba", href: "#" },
-                { label: "Nossas Praias", href: "#" },
-                { label: "Atrativos Turísticos", href: "#" },
-                { label: "Hospedagens", href: "#" },
-                { label: "Gastronomia", href: "/gastronomia" },
-                { label: "Fale Conosco", href: "#" },
-              ].map((item) => (
-                <a key={item.label} href={item.href} className="nav-link">{item.label}</a>
-              ))}
-            </div>
-          </nav>
-          {usuario ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginLeft: "12px" }}>
-              <a href="/perfil" style={{ fontSize: "14px", fontWeight: "600", color: "#111", textDecoration: "none" }}>
-                {usuario.user_metadata?.name || usuario.email}
-              </a>
-              <button onClick={async () => { await supabase.auth.signOut(); setUsuario(null); }} style={{ backgroundColor: "#f3f4f6", color: "#111", border: "none", padding: "8px 16px", borderRadius: "999px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>
-                Sair
-              </button>
-            </div>
-          ) : (
-            <a href="/login" style={{ textDecoration: "none", backgroundColor: "#111", color: "white", padding: "8px 20px", borderRadius: "999px", fontSize: "14px", fontWeight: "600", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", marginLeft: "12px" }}>
-              Entrar
-            </a>
-          )}
-        </div>
-      </header>
+      <Header />
 
       <div style={{ height: "60px" }} />
 
@@ -157,9 +129,9 @@ export default function Home() {
         </div>
         <div style={{ width: "70%", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
           {[
-            { label: "Atrativos Turísticos", foto: "https://static.ndmais.com.br/2023/08/praia-do-siriu-garopaba-3-800x599.jpeg", href: "/home" },
-            { label: "Nossas Praias", foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/2a/40/3b/visao-do-alto-do-morro.jpg", href: "/home" },
-            { label: "Hospedagens", foto: "https://www.passaromarron.com.br/wp-content/uploads/2023/12/dicas-para-hospedagem.jpg", href: "/home" },
+            { label: "Atrativos Turísticos", foto: "https://static.ndmais.com.br/2023/08/praia-do-siriu-garopaba-3-800x599.jpeg", href: "/atrativos-turisticos" },
+            { label: "Nossas Praias", foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/2a/40/3b/visao-do-alto-do-morro.jpg", href: "/nossas-praias" },
+            { label: "Hospedagens", foto: "https://www.passaromarron.com.br/wp-content/uploads/2023/12/dicas-para-hospedagem.jpg", href: "/hospedagens" },
             { label: "Gastronomia", foto: "https://img.freepik.com/fotos-gratis/uma-variedade-plana-com-deliciosa-comida-brasileira_23-2148739179.jpg", href: "/gastronomia" },
           ].map((cat) => (
             <a key={cat.label} href={cat.href} className="cat-card">
@@ -247,11 +219,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer style={{ backgroundColor: "#1f2937", color: "#9ca3af", padding: "32px 0", textAlign: "center" }}>
-        <p style={{ color: "white", fontWeight: "700", fontSize: "16px", margin: "0 0 4px" }}>Destino Garopaba</p>
-        <p style={{ fontSize: "13px", margin: 0 }}>O guia definitivo de Garopaba, SC</p>
-      </footer>
+      <Footer />
 
     </main>
   );

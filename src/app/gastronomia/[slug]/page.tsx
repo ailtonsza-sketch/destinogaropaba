@@ -2,6 +2,10 @@
 import { useState, useEffect, use } from "react";
 import { createClient } from "@supabase/supabase-js";
 
+import Header from "@/components/Header";
+
+import Footer from "@/components/Footer";
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -254,37 +258,7 @@ export default function RestaurantePage({ params }: { params: Promise<{ slug: st
         .aba-rest.ativa { color: #111; border-bottom: 3px solid #111; }
       `}</style>
 
-      <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, backgroundColor: "white", borderBottom: "1px solid #e5e7eb", height: "60px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
-        <div style={{ width: "70%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <a href="/home" style={{ textDecoration: "none", fontSize: "20px", fontWeight: "800", color: "#111", letterSpacing: "-0.5px" }}>Destino Garopaba</a>
-          <nav style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            {[
-              { label: "Garopaba", href: "/home" },
-              { label: "Nossas Praias", href: "/home" },
-              { label: "Atrativos Turísticos", href: "/home" },
-              { label: "Hospedagens", href: "/home" },
-              { label: "Gastronomia", href: "/gastronomia" },
-              { label: "Fale Conosco", href: "/home" },
-            ].map((item) => (
-              <a key={item.label} href={item.href} className="nav-link-rest">{item.label}</a>
-            ))}
-            {usuario ? (
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginLeft: "12px" }}>
-                <a href="/perfil" style={{ fontSize: "14px", fontWeight: "600", color: "#111", textDecoration: "none" }}>
-                  {usuario.user_metadata?.name || usuario.email}
-                </a>
-                <button onClick={async () => { await supabase.auth.signOut(); setUsuario(null); window.location.reload(); }} style={{ backgroundColor: "#f3f4f6", color: "#111", border: "none", padding: "8px 16px", borderRadius: "999px", fontSize: "14px", fontWeight: "600", cursor: "pointer" }}>
-                  Sair
-                </button>
-              </div>
-            ) : (
-              <a href="/login" style={{ textDecoration: "none", backgroundColor: "#111", color: "white", padding: "8px 20px", borderRadius: "999px", fontSize: "14px", fontWeight: "600", marginLeft: "12px" }}>
-                Entrar
-              </a>
-            )}
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       <div style={{ height: "60px" }} />
 
@@ -504,10 +478,7 @@ export default function RestaurantePage({ params }: { params: Promise<{ slug: st
         </div>
       </div>
 
-      <footer style={{ backgroundColor: "#1f2937", color: "#9ca3af", padding: "32px 0", textAlign: "center" }}>
-        <p style={{ color: "white", fontWeight: "700", fontSize: "16px", margin: "0 0 4px" }}>Destino Garopaba</p>
-        <p style={{ fontSize: "13px", margin: 0 }}>O guia definitivo de Garopaba, SC</p>
-      </footer>
+      <Footer />
 
       {mostrarCorrecao && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>

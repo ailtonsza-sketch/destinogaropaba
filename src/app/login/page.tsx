@@ -28,7 +28,10 @@ export default function LoginPage() {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
       if (error) setErro("Email ou senha incorretos.");
-      else window.location.href = "/home";
+      else {
+        const { data: perfil } = await supabase.from("perfis").select("username").eq("id", (await supabase.auth.getUser()).data.user!.id).single();
+        window.location.href = perfil?.username ? `/u/${perfil.username}` : "/perfil";
+      }
     }
     setLoading(false);
   };
@@ -36,7 +39,7 @@ export default function LoginPage() {
   const handleGoogle = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/home` },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
   };
 
